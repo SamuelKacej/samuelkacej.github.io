@@ -1,54 +1,41 @@
-# Aperture
+# Photo portfolio (GitHub Pages)
 
-Aperture template for Jekyll. Browse through a [live demo](https://cosmic-hippopotamus.cloudvent.net/).
+Dark portfolio site with a photo gallery and interactive 360° panoramas.
 
-![Aperture template screenshot](images/_screenshot.png)
+## Managing photos (no code needed)
 
-Aperture was made by [CloudCannon](http://cloudcannon.com/), the Cloud CMS for Jekyll.
-Find more templates and themes at [CloudCannon Academy](https://learn.cloudcannon.com/jekyll-templates/).
+Do everything on github.com in your repo:
 
-Learn Jekyll with step-by-step tutorials and videos at [CloudCannon Academy](https://learn.cloudcannon.com/).
+- **Add:** open the `photos/` folder (normal photos) or `panos/` folder (360° panoramas) → **Add file → Upload files** → drag in your images → **Commit changes**.
+- **Delete:** open the file → trash-can icon (⋯ menu → Delete file) → **Commit changes**.
+- **Captions (optional):** edit `photos/captions.json` (or `panos/captions.json`), e.g. `{"IMG_001.jpg": "Sunrise over the lake"}`. Without a caption, the file name is used as the title.
 
-[![Deploy to CloudCannon](https://buttons.cloudcannon.com/deploy.svg)](https://app.cloudcannon.com/register#sites/connect/github/CloudCannon/aperture-jekyll-template)
+About a minute after each commit, GitHub rebuilds and republishes the site automatically.
 
-## Features
+Panoramas must be **equirectangular** (2:1 ratio, as exported by 360° cameras and phone panorama modes). Formats: jpg, png, webp.
 
-* Photo grid
-* Thumbnails
-* Captions
-* About page
-* Contact page
+## One-time setup
 
-## Setup
+1. Create a GitHub repo and upload everything in this folder.
+2. **Settings → Pages → Build and deployment → Source: GitHub Actions.**
+3. Push to `main`. The workflow in `.github/workflows/deploy.yml` builds and deploys. Your URL is `https://<username>.github.io/<repo>/`.
 
-1. Add your site and author details in `_config.yml`.
-2. Get a workflow going to see your site's output (with [CloudCannon](https://app.cloudcannon.com/) or Jekyll locally).
+## Editing the text
 
-## Develop
+Edit `src/index.html`: name, tagline, About text, email and social links. The header already has a commented-out **Shop** link and section placeholder.
 
-Aperture was built with [Jekyll](http://jekyllrb.com/) version 3.7.2, but should support newer versions as well.
+## Image protection: what it does and doesn't do
 
-Install the dependencies with [Bundler](http://bundler.io/):
+- Right-click, drag-and-drop and long-press save are blocked, and photos are drawn as backgrounds with an invisible layer on top, so there's no "Save image as".
+- The site only publishes **downsized copies** (1800 px photos, 6000 px panoramas). Your full-resolution originals in `photos/` and `panos/` are **not** deployed. Note that if the repo itself is public, anyone can still browse the originals on github.com. Use a private repo (GitHub Pages on private repos needs a paid plan) if that matters.
+- A visitor can still take a screenshot or use browser DevTools to find the image URL. Nothing on the web can fully prevent that. To discourage reuse, set `WATERMARK_TEXT` in `scripts/build_site.py` (e.g. `"© Your Name"`).
 
-~~~bash
-$ bundle install
-~~~
+## Local preview
 
-Run `jekyll` commands through Bundler to ensure you're using the right versions:
+```bash
+pip install -r requirements.txt
+python scripts/build_site.py
+cd _site && python -m http.server 8000
+```
 
-~~~bash
-$ bundle exec jekyll serve
-~~~
-
-## Editing
-
-Aperture is already optimised for adding, updating and removing photos and navigation in CloudCannon.
-
-### Navigation
-
-* Exposed as a data file to give clients better access.
-* Set in the *Data* / *Navigation* section.
-
-### Photo Gallery
-
-* Populated using front matter array in `index.html`.
+Then open http://localhost:8000.
