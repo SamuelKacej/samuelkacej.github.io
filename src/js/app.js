@@ -31,14 +31,14 @@
   const reveal = el => io ? io.observe(el) : el.classList.add("in");
 
   // ---- build tiles (background-image + transparent shield => no <img> to "Save as") ----
-  function tile(item, isPano, onClick) {
+  function tile(item, isPano, onClick, uniform) {
     const d = document.createElement("div");
     d.className = "ph";
     d.setAttribute("role", "button");
     d.tabIndex = 0;
     d.setAttribute("aria-label", item.title);
     d.style.backgroundImage = `url("${item.thumb}")`;
-    d.style.aspectRatio = isPano ? "16/9" : `${item.w} / ${item.h}`;
+    d.style.aspectRatio = (isPano || uniform) ? (isPano ? "16/9" : "4/3") : `${item.w} / ${item.h}`;
     d.innerHTML = (isPano ? '<span class="badge">360°</span>' : "") +
       '<span class="shield"></span><span class="cap">' + esc(item.title) + "</span>";
     d.onclick = onClick;
@@ -91,19 +91,48 @@
     if (!lb.hidden && e.key === "ArrowRight") showPhoto(cur + 1);
   });
 
+  // ---- home-page previews: show ~1.5 rows, fade out, "See gallery" button ----
+  const previews = [];
+  function fitPreview(wrap) {
+    const grid = wrap.firstElementChild, first = grid.firstElementChild;
+    if (!first) return;
+    const cols = getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+    const gap = parseFloat(getComputedStyle(grid).rowGap) || 0;
+    const clipped = grid.children.length > cols;
+    wrap.classList.toggle("clipped", clipped);
+    wrap.style.height = clipped ? Math.round(first.offsetHeight * 1.5 + gap) + "px" : "";
+  }
+  function fillPreview(gridId, items, isPano, onClick, uniform) {
+    const grid = $(gridId), wrap = grid.parentElement;
+    const cols = getComputedStyle(grid).gridTemplateColumns.split(" ").length;
+    items.slice(0, cols * 2).forEach((p, i) => grid.appendChild(tile(p, isPano, () => onClick(p, i), uniform)));
+    previews.push(wrap);
+    fitPreview(wrap);
+  }
+  window.addEventListener("resize", () => previews.forEach(fitPreview));
+
   // ---- load data ----
+  const home = !!document.querySelector(".preview");
   fetch("data/gallery.json")
     .then(r => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then(data => {
       photos = data.photos || [];
-      photos.forEach((p, i) => $("photos").appendChild(tile(p, false, () => openLb(i))));
-      (data.panos || []).forEach(p => $("panos").appendChild(tile(p, true, () => openPano(p))));
-      $("photos-empty").hidden = photos.length > 0;
-      $("panos-empty").hidden = (data.panos || []).length > 0;
+      const panos = data.panos || [];
+      if (home) {
+        if (photos.length) fillPreview("photos", photos, false, (p, i) => openLb(i), true);
+        if (panos.length) fillPreview("panos", panos, true, p => openPano(p));
+        $("photos-preview").hidden = !photos.length;
+        $("panos-preview").hidden = !panos.length;
+      } else {
+        if ($("photos")) photos.forEach((p, i) => $("photos").appendChild(tile(p, false, () => openLb(i))));
+        if ($("panos")) panos.forEach(p => $("panos").appendChild(tile(p, true, () => openPano(p))));
+      }
+      if ($("photos-empty")) $("photos-empty").hidden = photos.length > 0;
+      if ($("panos-empty")) $("panos-empty").hidden = panos.length > 0;
     })
     .catch(err => {
       console.error("Could not load gallery data", err);
-      $("photos-empty").textContent = "Gallery could not be loaded.";
-      $("photos-empty").hidden = false;
+      const e = $("photos-empty") || $("panos-empty");
+      if (e) { e.textContent = "Gallery could not be loaded."; e.hidden = false; }
     });
 })();

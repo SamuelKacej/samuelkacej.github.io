@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Gallery – Samuel Kacej</title>
+<meta name="description" content="Photography portfolio and 360° panoramas.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body data-page="gallery">
+
+<header class="site-header" id="top">
+  <a class="logo" href="index.html">SAMUEL KACEJ</a>
+  <button class="burger" id="burger" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  <nav id="nav">
+    <a href="index.html#gallery">Gallery</a>
+    <a href="index.html#panoramas">360°</a>
+    <a href="index.html#about">About me</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<main>
+  <section class="block page-top">
+    <a class="back" href="index.html">← Back</a>
+    <div class="section-head"><h2>Gallery</h2><p>All photos</p></div>
+    <div class="masonry" id="photos"></div>
+    <p class="empty" id="photos-empty" hidden>No photos yet.</p>
+  </section>
+</main>
+
+<footer><p>© <span id="year"></span> Samuel Kacej. All rights reserved. Images may not be copied or used without permission.</p></footer>
+
+<div id="lightbox" class="lightbox" hidden>
+  <button class="lb-btn lb-close" id="lb-close" aria-label="Close">×</button>
+  <button class="lb-btn lb-prev" id="lb-prev" aria-label="Previous">‹</button>
+  <button class="lb-btn lb-next" id="lb-next" aria-label="Next">›</button>
+  <div class="lb-img" id="lb-img"></div>
+  <p class="lb-caption" id="lb-caption"></p>
+</div>
+
+<div id="panoviewer" class="panoviewer" hidden>
+  <button class="lb-btn lb-close" id="pano-close" aria-label="Close">×</button>
+  <div id="pano"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pannellum/2.5.6/pannellum.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

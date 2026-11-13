@@ -58,6 +58,23 @@ nav a:hover::after { width: 100%; }
 .pano-grid .ph { margin: 0; aspect-ratio: 16/9; }
 .badge { position: absolute; top: 12px; left: 12px; z-index: 1; background: var(--accent); color: #000; font-size: 11px; font-weight: 800; letter-spacing: .08em; padding: 3px 10px; border-radius: 100px; }
 
+/* ---------- home previews (1.5 rows + fade) ---------- */
+.block.alt { --fade-bg: var(--bg-alt); }
+.block { --fade-bg: var(--bg); }
+.preview { position: relative; }
+.preview[hidden] { display: none; }
+.preview.clipped { overflow: hidden; }
+.preview-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.preview-grid .ph { margin: 0; }
+.preview .fade { display: flex; justify-content: center; padding-top: 28px; }
+.preview.clipped .fade { position: absolute; inset: auto 0 0 0; height: 100%; align-items: flex-end; padding: 0 0 8px; pointer-events: none;
+  background: linear-gradient(to bottom, transparent 0%, transparent 25%, color-mix(in srgb, var(--fade-bg) 70%, transparent) 60%, var(--fade-bg) 95%); }
+.preview.clipped .fade .btn { pointer-events: auto; background: var(--bg); }
+.preview.clipped .fade .btn:hover { background: var(--fg); }
+.page-top { padding-top: 120px; min-height: 100vh; }
+.back { display: inline-block; margin-bottom: 24px; color: var(--muted); font-size: 14px; transition: color .2s; }
+.back:hover { color: var(--fg); }
+
 /* ---------- about / contact ---------- */
 .about { display: grid; grid-template-columns: minmax(220px, 1fr) 1.4fr; gap: clamp(24px, 6vw, 80px); align-items: center; max-width: 1100px; margin: 0 auto; }
 .about-photo { aspect-ratio: 4/5; border-radius: 8px; background: linear-gradient(145deg, #25252d, #15151a); overflow: hidden; border: 1px solid var(--line); }
@@ -94,6 +111,7 @@ footer p { margin: 0; }
   nav a { padding: 16px var(--pad); font-size: 16px; }
   nav a::after { display: none; }
   .about { grid-template-columns: 1fr; }
+  .preview-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
   .lb-img { inset: 64px 8px 64px; }
   .lb-prev { left: 4px; } .lb-next { right: 4px; }
 }
